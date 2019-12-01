@@ -30,7 +30,7 @@ public class FracCalc {
     			res = produceAnswer(numinput);
     			
     			
-    			System.out.println(res);
+    			System.out.println("Result: " + res);
     		}
     		
     		
@@ -49,6 +49,7 @@ public class FracCalc {
     //
     // The function should return the result of the fraction after it has been calculated
     //      e.g. return ==> "1_1/4"
+    
     public static String produceAnswer(String input)
     {
     	// TODO: Implement this function to produce the solution to the input
@@ -56,41 +57,214 @@ public class FracCalc {
     	int spacenum = input.indexOf(" ");
     	String firstop = input.substring(0,spacenum);
     	String secondop = input.substring(spacenum+3,length);
-    	int opnum = secondop.indexOf("/");
-    	int secondlength = secondop.length();
-    	int wholelength = input.indexOf("_");
+/*    	int secondop.indexOf("/") = secondop.indexOf("/");
+    	int secondop.length() = secondop.length();
+    	int input.indexOf("_") = input.indexOf("_");
+ */   	
+    	String firstfrac = testsOne(firstop, input);
+    	int w1 = Integer.parseInt(firstfrac.substring(0,firstfrac.indexOf("a")));
+    	int n1 = Integer.parseInt(firstfrac.substring(firstfrac.indexOf("a")+1,firstfrac.indexOf("b")));
+    	int d1 = Integer.parseInt(firstfrac.substring(firstfrac.indexOf("b")+1,firstfrac.length()));
+
+    	String secondfrac = testsTwo(secondop);
+    	int w2 = Integer.parseInt(secondfrac.substring(0,secondfrac.indexOf("a")));
+    	int n2 = Integer.parseInt(secondfrac.substring(secondfrac.indexOf("a")+1,secondfrac.indexOf("b")));
+    	int d2 = Integer.parseInt(secondfrac.substring(secondfrac.indexOf("b")+1,secondfrac.length()));
+    	System.out.println(firstfrac);
+    	System.out.println(secondfrac);
+
+
+    	int lcm = Lcm(d1, d2);
+    	int df =0;
+    	int nf =0;
+    	int div1 = lcm / d1;
+    	int div2 = lcm / d2;
+    	int n11 = n1*div1;
+    	int n12 = 0;
+    	if (w1 < 0) {
+    		n12 = w1*lcm - n11;
+    	} else {
+    		n12 = n11 + w1*lcm;
+    	}
     	
+    	int n21 = n2*div2;
+    	int n22 =0;
+    	if (w2 < 0) {
+    		n22 = w2*lcm - n21;
+    	} else {
+    		n22 = n21 + w2*lcm;
+    	}
+    	System.out.println("n12: " + n12);
+    	System.out.println("n22: " + n22);
+    
+
     	
-// Conditions for return values 	
-    	if (secondop.contains("_")) {
-    		String wholenum = secondop.substring(0,wholelength);
-			String numer = secondop.substring(wholelength +1, opnum);
-			String denom = secondop.substring(opnum+1, secondlength);
-			String outt = "whole:" + wholenum + " numerator:" + numer + " denominator:" + denom;
-        	return outt;
+    	if (input.contains(" + ")) {
+    		nf = n12 + n22;
+    		System.out.println("nf1: " + nf);
+    		df = lcm;
+    		System.out.println("df: " + df);
+
+    	}
+    	if (input.contains(" - ") && !input.contains(" + ") ) {
+    		nf = n12 - n22;
+    		System.out.println("nf1: " + nf);
+    		df = lcm;
+    		System.out.println("df: " + df);
+    	}
+    	if (input.contains(" * ")) {
+    		nf = n12 * n22;
+    		System.out.println("nf1: " + nf);
+    		df = lcm *lcm;
+    		System.out.println("df: " + df);
+    	}
+    	if (!input.contains(" * ") && !input.contains(" - ") && !input.contains(" + ") ) {
+    		nf = n12 * lcm;
+    		System.out.println("nf1: " + nf);
+    		df = lcm * n22;
+    		System.out.println("df: " + df);
+    	}
+    	
+    	String neg = "-";
+    	if (nf>0 && df>0 ) {
+    		neg ="";
+    	}
+    	if (nf <0 && df <0) {
+    		neg ="";
+    	}
+    	
+    	nf = Math.abs(nf);
+		df = Math.abs(df);
+		
+    	int wf =0;
+    	int extra = nf/df;
+    	System.out.println("nf: " + nf);
+    	System.out.println("extra: " + extra);
+    	if (Math.abs(nf)>df) {
+    		wf += extra;
+    		System.out.println("wf: " + wf);
+    		nf -= extra*df;
+    	}
+
+    		
+    	
+		if (wf!= 0) {
+			if (nf == 0) {
+				String outt = neg + "" + wf;
+				return outt;
+			}else {
+				String outt = neg + wf + "_" + nf + "/" + df;
+				return outt;
+			}
     		
     		
     	} else {
-    		if (secondop.contains("/")) {
-    			String wholenum = "0";
-    			String numer = secondop.substring(0, opnum);
-   				String denom = secondop.substring(opnum+1, secondlength);
-   				String outt = "whole:" + wholenum + " numerator:" + numer + " denominator:" + denom;
-   	        	return outt;
+    		if (nf == 0){
+    			String outt = "0";
+   				return outt;
    	        	
    			} else {
-    			String wholenum =secondop;
-    			String numer = "0";
-    			String denom = "1";
-    			String outt = "whole:" + wholenum + " numerator:" + numer + " denominator:" + denom;
-       	        return outt;
+   				String outt = neg + nf + "/" + df;
+    			return outt;
     		}
     			
     	}
+    	
+    	
+    	
+	
+// Conditions for return values 	
+    	
+    	
+    	
     			
     	
     }
+	
+		public static int Lcm(int d1, int d2) {
+			int gcd = 1;
+			if (d1!= 0 || d2 != 0) {
+				for(int i = 1; i <= d1 && i <= d2; ++i) {
 
+		            if(d1 % i == 0 && d2 % i == 0) {
+		                gcd = i;
+		            }
+		        }
+				
+				int lcm = (d1 * d2) / gcd;
+				System.out.println(lcm);
+				return lcm;
+				
+	    	} else {
+	    		int lcm = 0;
+	    		System.out.println(lcm);
+				return lcm;
+	    	}
+			
+		}
+			
+	
+
+    	public static String testsOne(String firstop, String input) {
+        		if (firstop.contains("_")) {
+        			
+            		String wholenum = firstop.substring(0,input.indexOf("_"));
+        			String numer = firstop.substring(input.indexOf("_") +1, firstop.indexOf("/"));
+        			String denom = firstop.substring(firstop.indexOf("/")+1, firstop.length());
+        			String outt = wholenum +"a" +numer + "b" + denom;
+                	return outt;
+            		
+            		
+            	} else {
+            		if (firstop.contains("/")) {
+            			String wholenum = "0";
+            			String numer = firstop.substring(0, firstop.indexOf("/"));
+           				String denom = firstop.substring(firstop.indexOf("/")+1, firstop.length());
+           				String outt = wholenum +"a" +numer + "b" + denom;           	        	return outt;
+           	        	
+           			} else {
+            			String wholenum =firstop;
+            			String numer = "0";
+            			String denom = "1";
+            			String outt = wholenum +"a" +numer + "b" + denom;               	        return outt;
+            		}
+            			
+            	}
+    	}
+        		
+    	
+    		
+    		
+    		
+    		
+    	public static String testsTwo(String secondop) {
+    		if (secondop.contains("_")) {
+    			
+        		String wholenum = secondop.substring(0,secondop.indexOf("_"));
+    			String numer = secondop.substring(secondop.indexOf("_") +1, secondop.indexOf("/"));
+    			String denom = secondop.substring(secondop.indexOf("/")+1, secondop.length());
+    			String outt = wholenum +"a" +numer + "b" + denom;
+    			return outt;
+        		
+        		
+        	} else {
+        		if (secondop.contains("/")) {
+        			String wholenum = "0";
+        			String numer = secondop.substring(0, secondop.indexOf("/"));
+       				String denom = secondop.substring(secondop.indexOf("/")+1, secondop.length());
+       				String outt = wholenum +"a" +numer + "b" + denom;
+       				return outt;
+       	        	
+       			} else {
+        			String wholenum =secondop;
+        			String numer = "0";
+        			String denom = "1";
+        			String outt = wholenum +"a" +numer + "b" + denom;
+        			return outt;
+        		}
+        			
+        	}
+    	}
     // TODO: Fill in the space below with any helper methods that you think you will need
 
 }
