@@ -61,7 +61,7 @@ public class FracCalc {
     	int secondop.length() = secondop.length();
     	int input.indexOf("_") = input.indexOf("_");
  */   	
-    	String firstfrac = testsOne(firstop, input);
+    	String firstfrac = testsTwo(firstop);
     	int w1 = Integer.parseInt(firstfrac.substring(0,firstfrac.indexOf("a")));
     	int n1 = Integer.parseInt(firstfrac.substring(firstfrac.indexOf("a")+1,firstfrac.indexOf("b")));
     	int d1 = Integer.parseInt(firstfrac.substring(firstfrac.indexOf("b")+1,firstfrac.length()));
@@ -70,8 +70,6 @@ public class FracCalc {
     	int w2 = Integer.parseInt(secondfrac.substring(0,secondfrac.indexOf("a")));
     	int n2 = Integer.parseInt(secondfrac.substring(secondfrac.indexOf("a")+1,secondfrac.indexOf("b")));
     	int d2 = Integer.parseInt(secondfrac.substring(secondfrac.indexOf("b")+1,secondfrac.length()));
-    	System.out.println(firstfrac);
-    	System.out.println(secondfrac);
 
 
     	int lcm = Lcm(d1, d2);
@@ -94,35 +92,25 @@ public class FracCalc {
     	} else {
     		n22 = n21 + w2*lcm;
     	}
-    	System.out.println("n12: " + n12);
-    	System.out.println("n22: " + n22);
     
 
     	
     	if (input.contains(" + ")) {
     		nf = n12 + n22;
-    		System.out.println("nf1: " + nf);
     		df = lcm;
-    		System.out.println("df: " + df);
 
     	}
     	if (input.contains(" - ") && !input.contains(" + ") ) {
     		nf = n12 - n22;
-    		System.out.println("nf1: " + nf);
     		df = lcm;
-    		System.out.println("df: " + df);
     	}
     	if (input.contains(" * ")) {
     		nf = n12 * n22;
-    		System.out.println("nf1: " + nf);
     		df = lcm *lcm;
-    		System.out.println("df: " + df);
     	}
     	if (!input.contains(" * ") && !input.contains(" - ") && !input.contains(" + ") ) {
     		nf = n12 * lcm;
-    		System.out.println("nf1: " + nf);
     		df = lcm * n22;
-    		System.out.println("df: " + df);
     	}
     	
     	String neg = "-";
@@ -138,15 +126,28 @@ public class FracCalc {
 		
     	int wf =0;
     	int extra = nf/df;
-    	System.out.println("nf: " + nf);
-    	System.out.println("extra: " + extra);
+	
+    	
     	if (Math.abs(nf)>df) {
     		wf += extra;
-    		System.out.println("wf: " + wf);
     		nf -= extra*df;
     	}
 
+    	int gcd = 0;
+    	
+    	if (nf==df) {
+    		wf += 1;
+    		nf = 0;
+    		df = 0;
+    	}
+    	if (nf>0 && df>0) {
+    		gcd = gcdtest(nf,df);
+    		nf = nf/gcd;
+    		df = df/gcd;
     		
+    	}
+    	
+    	
     	
 		if (wf!= 0) {
 			if (nf == 0) {
@@ -175,11 +176,27 @@ public class FracCalc {
 	
 // Conditions for return values 	
     	
-    	
-    	
+    
     			
     	
     }
+    	
+    
+
+	public static int gcdtest(int d1, int d2) {
+		int gcd = 1;
+			for(int i = 1; i <= d1 && i <= d2; ++i) {
+
+	            if(d1 % i == 0 && d2 % i == 0) {
+	                gcd = i;
+	            }
+	        }
+			
+
+			return gcd;
+			
+    	}
+		
 	
 		public static int Lcm(int d1, int d2) {
 			int gcd = 1;
@@ -192,7 +209,6 @@ public class FracCalc {
 		        }
 				
 				int lcm = (d1 * d2) / gcd;
-				System.out.println(lcm);
 				return lcm;
 				
 	    	} else {
@@ -203,38 +219,6 @@ public class FracCalc {
 			
 		}
 			
-	
-
-    	public static String testsOne(String firstop, String input) {
-        		if (firstop.contains("_")) {
-        			
-            		String wholenum = firstop.substring(0,input.indexOf("_"));
-        			String numer = firstop.substring(input.indexOf("_") +1, firstop.indexOf("/"));
-        			String denom = firstop.substring(firstop.indexOf("/")+1, firstop.length());
-        			String outt = wholenum +"a" +numer + "b" + denom;
-                	return outt;
-            		
-            		
-            	} else {
-            		if (firstop.contains("/")) {
-            			String wholenum = "0";
-            			String numer = firstop.substring(0, firstop.indexOf("/"));
-           				String denom = firstop.substring(firstop.indexOf("/")+1, firstop.length());
-           				String outt = wholenum +"a" +numer + "b" + denom;           	        	return outt;
-           	        	
-           			} else {
-            			String wholenum =firstop;
-            			String numer = "0";
-            			String denom = "1";
-            			String outt = wholenum +"a" +numer + "b" + denom;               	        return outt;
-            		}
-            			
-            	}
-    	}
-        		
-    	
-    		
-    		
     		
     		
     	public static String testsTwo(String secondop) {
